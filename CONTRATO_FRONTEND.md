@@ -1,12 +1,12 @@
 # Contrato provisional entre backend y frontend — CU 36
 
-**Acordar con el compañero de frontend antes de integrar.** Los datos mostrados son de ejemplo y la API GPS externa todavía requiere validación.
+**Acordar con el compañero de frontend antes de integrar.** Los datos mostrados son de ejemplo. La integración HTTP del backend con los tres modelos del simulador GPS ya fue verificada; la integración del frontend está pendiente.
 
 ## Consultar seguimiento
 
 `GET http://localhost:8081/api/seguimiento?usuario=encargado-cba`
 
-Filtros optativos: `precinto=P-101` y `destino=ROS`. `usuario` representa una simulación de sesión para el TP; no usar como autenticación real.
+Filtros optativos: `precinto=P-101` y `destino=CM-ROS-02`. El destino se compara por código exacto. El controller crea una sesión demo por petición a partir de `usuario`; no usar como autenticación real.
 
 Respuesta 200 (array):
 
@@ -30,6 +30,8 @@ Respuesta 200 (array):
 ```
 
 Si el GPS no responde, el bolsín permanece en la lista con `ubicacion: null` y `errorGps` descriptivo. `[]` significa que no hay bolsines enviados o que no coinciden con el filtro.
+
+El historial determina el estado vigente. Si un bolsín de la CM consultada tiene cero o varios cambios actuales, se devuelve `409 Conflict` con un mensaje explícito de inconsistencia. Las fechas GPS sin zona se interpretan como UTC por convención del backend.
 
 ## Notificar ubicación
 
