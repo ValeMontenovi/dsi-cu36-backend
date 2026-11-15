@@ -7,5 +7,5 @@ import ar.edu.utn.dsi.bolsines.dto.UbicacionBolsin;
 @Component public class GeoPulseAdapter implements IGpsTracker {
  private final ClienteGpsHttp cliente;private final String path;private final String apiKey;private final NormalizadorGps normalizador=new NormalizadorGps();
  public GeoPulseAdapter(ClienteGpsHttp cliente,@Value("${tracker.geopulse-path}") String path,@Value("${tracker.geopulse-api-key}") String apiKey){this.cliente=cliente;this.path=path;this.apiKey=apiKey;}
- @Override public UbicacionBolsin obtenerUbicacion(Bolsin b){return normalizador.desdeMatriz(cliente.get(path,apiKey,Map.of("numeroBolsin",b.getNumero().toString())));}
+ @Override public UbicacionBolsin obtenerUbicacion(Bolsin b){return normalizador.desdeMatriz(cliente.get(path,apiKey,Map.of("numeroBolsin",b.getNroBolsin().toString())));}
 }

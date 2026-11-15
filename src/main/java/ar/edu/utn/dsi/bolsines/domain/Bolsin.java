@@ -8,5 +8,5 @@ import jakarta.persistence.*;
  @Enumerated(EnumType.STRING) @Column(nullable=false) private ModeloGps modeloGps;
  protected Bolsin(){}
  public Bolsin(Long numero,String numeroPrecinto,ComisionMedica origen,ComisionMedica destino,EstadoBolsin estado,ModeloGps modeloGps){this.numero=numero;this.numeroPrecinto=numeroPrecinto;this.origen=origen;this.destino=destino;this.estado=estado;this.modeloGps=modeloGps;}
- public Long getNumero(){return numero;}public String getNumeroPrecinto(){return numeroPrecinto;}public ComisionMedica getOrigen(){return origen;}public ComisionMedica getDestino(){return destino;}public EstadoBolsin getEstado(){return estado;}public ModeloGps getModeloGps(){return modeloGps;}
+ public Long getNroBolsin(){return numero;}public String getNroPrecinto(){return numeroPrecinto;}public ComisionMedica getOrigen(){return origen;}public ComisionMedica obtenerCMDestino(){return destino;}public EstadoBolsin getEstado(){return estado;}public ModeloGps getModeloGps(){return modeloGps;}
 }
