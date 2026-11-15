@@ -1,0 +1,12 @@
+{
+  "version": "0.2.0",
+  "configurations": [{
+    "type": "java",
+    "name": "Backend CU36 (demo, Java 21)",
+    "request": "launch",
+    "mainClass": "ar.edu.utn.dsi.bolsines.BolsinesApplication",
+    "cwd": "${workspaceFolder}",
+    "args": "--spring.profiles.active=demo --server.address=127.0.0.1",
+    "console": "integratedTerminal"
+  }]
+}

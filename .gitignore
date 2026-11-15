@@ -1,0 +1,13 @@
+target/
+data/
+*.log
+.env
+.vscode/settings.json
+.DS_Store
+
+.env.*
+!.env.example
+*.mv.db
+*.trace.db
+.tools/
+.m2/

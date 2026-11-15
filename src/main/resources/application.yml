@@ -1,0 +1,24 @@
+server:
+  port: 8081
+spring:
+  datasource:
+    url: jdbc:h2:file:./data/bolsines;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+  h2:
+    console:
+      enabled: true
+tracker:
+  base-url: ${GPS_BASE_URL:http://localhost:8080}
+  # Demo API keys published by the mock GPS project; change via env when needed.
+  xtr-api-key: ${GPS_XTR_API_KEY:sk_xtr_9F3a7C21bE6d4A10f2c8e5b7d913}
+  navtrack-api-key: ${GPS_NAVTRACK_API_KEY:sk_nav_7b61d9e4c3a2485fae10c77d5b2f}
+  geopulse-api-key: ${GPS_GEOPULSE_API_KEY:sk_geo_f2d84a1c9e7345b8a6d1c3f0972e}
+  xtr-path: /api/xtr-4500l/getBolsinLocation
+  navtrack-path: /api/navtrack-qx-7a/retrieveTrackingData
+  geopulse-path: /api/geopulse-mtr-900/fetchCargoPositions
