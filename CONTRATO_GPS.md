@@ -6,10 +6,10 @@ Boundary concreta `InterfazGPSTracker`:
 
 ```java
 String[][] obtenerLocalizacion(
-    int[] nroBolsines,
-    String[] modelosGps,
-    String codigoCMOrigen,
-    String[] codigosCMDestino
+  int[] nroBolsines,
+  String[] modelosGps,
+  String codigoCMOrigen,
+  String[] codigosCMDestino
 );
 ```
 
@@ -18,9 +18,9 @@ Contrato comun `IGpsTracker`, implementado por `AdaptadorXTR4500L`,
 
 ```java
 String[][] recibirDatosLocalizacion(
-    int[] nroBolsines,
-    String codigoCMOrigen,
-    String[] codigosCMDestino
+  int[] nroBolsines,
+  String codigoCMOrigen,
+  String[] codigosCMDestino
 );
 ```
 
@@ -45,13 +45,13 @@ Los adaptadores tambien aceptan lotes y validan igual longitud de numeros y dest
 
 Cada entrada genera exactamente una fila con cinco columnas:
 
-| Indice | Contenido | Exito | Fallo |
-|---|---|---|---|
-| 0 | numeroBolsin | Numero solicitado en decimal | Numero solicitado en decimal |
-| 1 | latitud | Decimal con punto | `null` |
-| 2 | longitud | Decimal con punto | `null` |
-| 3 | fechaHoraActualizacion | ISO 8601 con desplazamiento | `null` |
-| 4 | errorGps | `null` | Mensaje descriptivo no vacio |
+| Indice | Contenido              | Exito                        | Fallo                        |
+| ------ | ---------------------- | ---------------------------- | ---------------------------- |
+| 0      | numeroBolsin           | Numero solicitado en decimal | Numero solicitado en decimal |
+| 1      | latitud                | Decimal con punto            | `null`                       |
+| 2      | longitud               | Decimal con punto            | `null`                       |
+| 3      | fechaHoraActualizacion | ISO 8601 con desplazamiento  | `null`                       |
+| 4      | errorGps               | `null`                       | Mensaje descriptivo no vacio |
 
 No hay encabezado. La matriz tiene tantas filas como entradas, en su mismo orden.
 Una entrada vacia produce cero filas. Los valores ausentes son referencias Java `null`,

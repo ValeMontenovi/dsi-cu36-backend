@@ -51,6 +51,8 @@ La importacion conserva los codigos de CM existentes: no corrige automaticamente
 
 ## Trabajar en equipo
 
+Para aplicar el formato con Prettier (requiere Node.js y npm), ejecutar `npm ci` y luego `npm run format`. Para verificarlo sin modificar archivos, usar `npm run format:check`. Los plugins de Java y XML y sus versiones quedan fijados en `package-lock.json`. Node.js se usa solo para el formato; el backend se compila y ejecuta con Java y Maven.
+
 Clonar este repositorio y abrir su carpeta en VS Code. Cada integrante necesita JDK 21 y Maven 3.9+, además del simulador oficial en otra carpeta. Las instrucciones de inicio anteriores no dependen de las rutas de la computadora original.
 
 Antes de empezar una tarea, ejecutar `git pull`. Trabajar en una rama propia, subirla y proponer un pull request para revisar los cambios antes de unirlos a `main`.
