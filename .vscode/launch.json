@@ -6,7 +6,7 @@
       "name": "Backend CU36 (demo, Java 21)",
       "request": "launch",
       "mainClass": "ar.edu.utn.dsi.bolsines.BolsinesApplication",
-      "cwd": "${workspaceFolder}",
+      "cwd": "${workspaceFolder}/backend",
       "args": "--spring.profiles.active=demo --server.address=127.0.0.1",
       "console": "integratedTerminal"
     }

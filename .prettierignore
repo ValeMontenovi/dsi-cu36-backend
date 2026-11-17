@@ -9,3 +9,7 @@ node_modules/
 *.trace.db
 *.log
 package-lock.json
+
+# Simulador GPS de la cátedra (submódulo): no es código de este proyecto
+api/
+dist/

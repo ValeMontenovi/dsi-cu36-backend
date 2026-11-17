@@ -1,14 +1,14 @@
 # DSI Bolsines — CU 36 | Frontend (React + Vite)
 
 Frontend del CU 36 **Consultar seguimiento de bolsines**. Consume el backend de este mismo
-repositorio (la carpeta raíz) según [`CONTRATO_FRONTEND.md`](../CONTRATO_FRONTEND.md).
+repositorio (carpeta `../backend`) según [`CONTRATO_FRONTEND.md`](../CONTRATO_FRONTEND.md).
 
 ## Requisitos
 
 - Node.js 20+ (`node -v`)
-- Backend corriendo en `http://localhost:8081` (perfil `demo`, desde la carpeta raíz del repositorio)
+- Backend corriendo en `http://localhost:8081` (perfil `demo`, desde la carpeta `../backend`)
 - Simulador GPS de la cátedra corriendo en `http://localhost:8080`
-  ([LiberaeMentis/dsi-api-bolsines](https://github.com/LiberaeMentis/dsi-api-bolsines), se clona aparte)
+  (carpeta `../api`, submódulo de [LiberaeMentis/dsi-api-bolsines](https://github.com/LiberaeMentis/dsi-api-bolsines))
 
 ## Iniciar
 

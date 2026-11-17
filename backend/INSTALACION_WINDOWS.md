@@ -5,7 +5,7 @@
 1. Instalar **JDK 21** (por ejemplo Eclipse Temurin 21) desde https://adoptium.net/ .
 2. Instalar **VS Code** desde https://code.visualstudio.com/ si no lo tenés.
 3. Instalar **Maven 3.9+** desde https://maven.apache.org/download.cgi (o usar Maven Wrapper si luego se incorpora). Verificar su carpeta `bin` en PATH.
-4. Abrir en VS Code la **carpeta extraída** `dsi-cu36-backend` (no abrir solamente el archivo ZIP). VS Code recomendará las extensiones del proyecto: `Extension Pack for Java` y `Spring Boot Extension Pack`. Aceptarlas.
+4. Abrir en VS Code la **carpeta del repositorio** (la que contiene `backend/`, `frontend/` y `api/`; no abrir solamente el archivo ZIP). VS Code recomendará las extensiones del proyecto: `Extension Pack for Java` y `Spring Boot Extension Pack`. Aceptarlas.
 
 No compartas claves API, contraseñas ni tokens por chat.
 
@@ -21,7 +21,10 @@ Deben detectar un JDK 21 (no solamente JRE) y Maven.
 
 ## 3. Verificar pruebas y ejecutar
 
+Desde la carpeta `backend/`:
+
 ```powershell
+cd backend
 mvn test
 mvn spring-boot:run '-Dspring-boot.run.profiles=demo'
 ```
@@ -34,7 +37,7 @@ Abrir en navegador:
 
 ## 4. Integración con simulador provisto por la cátedra
 
-En una carpeta DIFERENTE clonar `https://github.com/LiberaeMentis/dsi-api-bolsines`. Abrir su README y ejecutar el simulador siguiendo sus instrucciones. Verificar rutas HTTP, formatos, parámetros, clave, headers y datos de prueba.
+El simulador `https://github.com/LiberaeMentis/dsi-api-bolsines` está en la carpeta `api/` del repositorio (submódulo). Si está vacía, ejecutar `git submodule update --init` desde la raíz. Abrir su README y ejecutar el simulador siguiendo sus instrucciones. Verificar rutas HTTP, formatos, parámetros, clave, headers y datos de prueba.
 
 Las rutas y los headers ya están alineados con el README del repositorio de la cátedra. Las claves demo vienen preconfiguradas; se pueden sobrescribir con `GPS_XTR_API_KEY`, `GPS_NAVTRACK_API_KEY` y `GPS_GEOPULSE_API_KEY`.
 
