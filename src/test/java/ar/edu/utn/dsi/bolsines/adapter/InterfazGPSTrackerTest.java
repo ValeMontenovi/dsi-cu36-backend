@@ -137,7 +137,7 @@ class InterfazGPSTrackerTest {
 
     @Test
     void cadaAdaptadorRechazaNumeroIncorrectoYContinuaSuLote() {
-        IGpsTracker[] adaptadores = {
+        IAdaptadorGPSTracker[] adaptadores = {
             new AdaptadorXTR4500L(cliente, "/xtr", "k"),
             new AdaptadorNavTrackQX7A(cliente, "/nav", "k"),
             new AdaptadorGeoPulseMTR900(cliente, "/geo", "k"),

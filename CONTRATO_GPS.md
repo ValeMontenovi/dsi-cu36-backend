@@ -13,8 +13,8 @@ String[][] obtenerLocalizacion(
 );
 ```
 
-Contrato comun `IGpsTracker`, implementado por `AdaptadorXTR4500L`,
-`AdaptadorNavTrackQX7A` y `AdaptadorGeoPulseMTR900` mediante el auxiliar `AdaptadorGps`:
+Contrato comun `IAdaptadorGPSTracker`, implementado por `AdaptadorXTR4500L`,
+`AdaptadorNavTrackQX7A` y `AdaptadorGeoPulseMTR900` directamente, sin una superclase de adaptadores:
 
 ```java
 String[][] recibirDatosLocalizacion(

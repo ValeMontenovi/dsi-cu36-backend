@@ -56,10 +56,13 @@ public class InterfazGPSTracker {
                 throw new IllegalArgumentException("Modelo GPS desconocido: " + modelos[i], e);
             }
         }
-        var adaptadores = new EnumMap<ModeloGps, IGpsTracker>(ModeloGps.class);
+        var adaptadores = new EnumMap<ModeloGps, IAdaptadorGPSTracker>(ModeloGps.class);
         String[][] resultado = new String[numeros.length][5];
         for (int i = 0; i < numeros.length; i++) {
-            IGpsTracker adaptador = adaptadores.computeIfAbsent(tipos[i], this::crearAdaptador);
+            IAdaptadorGPSTracker adaptador = adaptadores.computeIfAbsent(
+                tipos[i],
+                this::crearAdaptador
+            );
             resultado[i] = adaptador.recibirDatosLocalizacion(
                 new int[] { numeros[i] },
                 origen,
@@ -69,7 +72,7 @@ public class InterfazGPSTracker {
         return resultado;
     }
 
-    protected IGpsTracker crearAdaptador(ModeloGps modelo) {
+    protected IAdaptadorGPSTracker crearAdaptador(ModeloGps modelo) {
         return switch (modelo) {
             case XTR_4500L -> new AdaptadorXTR4500L(cliente, xtrPath, xtrClave);
             case NAVTRACK_QX_7A -> new AdaptadorNavTrackQX7A(cliente, navPath, navClave);

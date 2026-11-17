@@ -3,19 +3,57 @@ package ar.edu.utn.dsi.bolsines.adapter;
 import ar.edu.utn.dsi.bolsines.dto.UbicacionBolsin;
 import java.util.Map;
 
-public class AdaptadorGeoPulseMTR900 extends AdaptadorGps {
+public class AdaptadorGeoPulseMTR900 implements IAdaptadorGPSTracker {
+
+    private final ClienteGpsHttp cliente;
+    private final String path;
+    private final String claveApi;
+    private final NormalizadorGps normalizador = new NormalizadorGps();
 
     public AdaptadorGeoPulseMTR900(ClienteGpsHttp cliente, String path, String claveApi) {
-        super(cliente, path, claveApi);
+        this.cliente = cliente;
+        this.path = path;
+        this.claveApi = claveApi;
     }
 
     @Override
-    protected String solicitarLocalizacion(int numero, String origen, String destino) {
+    public String[][] recibirDatosLocalizacion(int[] numeros, String origen, String[] destinos) {
+        if (
+            numeros == null || destinos == null || numeros.length != destinos.length
+        ) throw new IllegalArgumentException(
+            "Numeros y destinos GPS deben tener igual longitud y no ser nulos"
+        );
+        String[][] filas = new String[numeros.length][5];
+        for (int i = 0; i < numeros.length; i++) {
+            filas[i][0] = Integer.toString(numeros[i]);
+            try {
+                UbicacionBolsin u = adaptarDatosRelevados(
+                    solicitarLocalizacion(numeros[i], origen, destinos[i])
+                );
+                if (u.numeroBolsin() != numeros[i]) throw new GpsException(
+                    "Respuesta GPS corresponde a otro bolsin"
+                );
+                filas[i][1] = Double.toString(u.latitud());
+                filas[i][2] = Double.toString(u.longitud());
+                filas[i][3] = u.fechaHoraActualizacion().toString();
+            } catch (GpsException | IllegalArgumentException e) {
+                filas[i] = new String[] {
+                    Integer.toString(numeros[i]),
+                    null,
+                    null,
+                    null,
+                    e.getMessage(),
+                };
+            }
+        }
+        return filas;
+    }
+
+    private String solicitarLocalizacion(int numero, String origen, String destino) {
         return cliente.get(path, claveApi, Map.of("numeroBolsin", Integer.toString(numero)));
     }
 
-    @Override
-    protected UbicacionBolsin adaptarDatosRelevados(String respuesta) {
+    private UbicacionBolsin adaptarDatosRelevados(String respuesta) {
         return normalizador.desdeMatriz(respuesta);
     }
 }

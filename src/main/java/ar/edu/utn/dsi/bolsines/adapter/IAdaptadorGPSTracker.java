@@ -1,6 +1,6 @@
 package ar.edu.utn.dsi.bolsines.adapter;
 
-public interface IGpsTracker {
+public interface IAdaptadorGPSTracker {
     String[][] recibirDatosLocalizacion(
         int[] nroBolsines,
         String codigoCMOrigen,

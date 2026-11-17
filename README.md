@@ -37,7 +37,7 @@ La importacion conserva los codigos de CM existentes: no corrige automaticamente
 
 ## Organización
 
-- `adapter/IGpsTracker`: interfaz Target
+- `adapter/IAdaptadorGPSTracker`: interfaz Target
 - `adapter/Adaptador*`: interpreta cada formato externo y devuelve la matriz normalizada de cinco columnas
 - `adapter/InterfazGPSTracker`: boundary que valida los arreglos y crea/reutiliza los adaptadores por consulta
 - `service/GestorSeguimientoBolsin`: coordina el CU, construye los arreglos y consume el contrato normalizado sin interpretar formatos externos
