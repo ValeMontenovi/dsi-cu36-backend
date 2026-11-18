@@ -58,7 +58,8 @@ src/
                                         modelo de GPS, adaptador usado y ubicación)
     MapaBolsines.jsx                    mapa Leaflet + OpenStreetMap con un pin amarillo por bolsín
                                         (el del bolsín elegido se resalta)
-    SeleccionBolsin.jsx                 barra para elegir un bolsín y continuar (solicitarSelBolsinTipo)
+    FiltroBolsines.jsx                  filtros por número de precinto y CM destino (A2)
+    SeleccionBolsin.jsx                 barra para elegir, continuar o cancelar (solicitarSelBolsinTipo, A4)
     ConfirmacionEnvioMail.jsx           ventana para confirmar el envío del mail (solicitarEnvioMail)
     Iconos.jsx                          logo del bolsín en SVG
     IconosMenu.jsx                      un ícono SVG por opción del menú
@@ -97,7 +98,19 @@ Todos usan la contraseña `Bolsines2026`.
 | `encargado.cordoba@bolsines.test`  | Encargado de Bolsines      | Córdoba   | `encargado-cba`       |
 | `encargado.rosario@bolsines.test`  | Encargado de Bolsines      | Rosario   | `encargado-ros`       |
 | `encargado.mendoza@bolsines.test`  | Encargado de Bolsines      | Mendoza   | `encargado-mdz`       |
+| `encargado.buenosaires@bolsines.test` | Encargado de Bolsines   | Buenos Aires | `encargado-ba`     |
+| `encargado.parana@bolsines.test`   | Encargado de Bolsines      | Paraná    | `encargado-pna`       |
 | `gerente.cordoba@bolsines.test`    | Gerente de Comisión Médica | Córdoba   | (no existe)           |
+
+Qué ve cada encargado en el seguimiento:
+
+| Encargado    | Bolsines enviados                                   | Sirve para probar             |
+|--------------|-----------------------------------------------------|-------------------------------|
+| Córdoba      | 101 (XTR), 105 y 107 (GeoPulse)                     | flujo normal y filtros        |
+| Rosario      | 102 (NavTrack) y 106 (GeoPulse)                     | flujo normal                  |
+| Mendoza      | 103 (GeoPulse) y 110 (NavTrack)                     | flujo normal                  |
+| Buenos Aires | 108 (GeoPulse), 109 (NavTrack) y 111 (XTR, sin GPS) | A3: el 111 no tiene ubicación |
+| Paraná       | ninguno                                             | A1: no hay bolsines enviados  |
 
 El gerente sirve para ver que cada perfil tiene otras opciones: no tiene el CU 36.
 
@@ -116,16 +129,25 @@ sistema real la contraseña la tiene que validar el backend.
 
 ## Selección del bolsín y envío del mail (resto del diagrama)
 
-1. Después de `mostrarMapaBolsin()` el gestor llama a `solicitarSelBolsinTipo()`: cada etiqueta de la
-   lista tiene un botón de opción. Solo se pueden elegir bolsines con ubicación.
+1. Después de `mostrarMapaBolsin()` el gestor llama a `solicitarSelBolsinTipo()`: se puede elegir un
+   bolsín en la lista (botón de opción) o tocando su pin en el mapa. Solo se pueden elegir bolsines con
+   ubicación. Arriba de la lista se puede filtrar por número de precinto o por CM destino.
 2. Con **Continuar** la pantalla ejecuta `tomarSeleccionBolsin()` → gestor `tomarSelecBolsin()`.
-3. El gestor llama a `solicitarEnvioMail()`: se abre la ventana de confirmación.
-4. **Confirmar envío** ejecuta `tomarConfirmacion()` → gestor `regConfirmacion()`, que hace
-   `POST /api/seguimiento/{numero}/notificar`. En el backend van `buscarMail()`, el bucle de empleados y
+3. El gestor llama a `solicitarEnvioMail()`: se abre la ventana que pregunta si se envía el mail.
+4. **Enviar mail** ejecuta `tomarConfirmacion(true)` → gestor `regConfirmacion(true)`, que hace
+   `POST /api/seguimiento/{numero}/notificar`. En el backend van `buscarMail()` y
    `llamarCU31/NotificarUbicacionBolsin()`. Con `204` el gestor ejecuta `finCU()` y se muestra
-   "Ubicación enviada". **Cancelar** (o Escape) vuelve a la selección.
+   "Ubicación enviada". **Elegir otro bolsín** (o Escape) cierra la ventana y vuelve a la selección.
 
-## Pendiente en el backend
+El mail se guarda en `backend/data/mails/` si el backend no tiene un servidor de correo configurado
+(ver `backend/INSTALACION_WINDOWS.md`).
 
-- `/notificar` hoy responde `501` porque no está configurado el proveedor de correo (CU 31). La pantalla
-  lo muestra como error; nunca como enviado.
+## Flujos alternativos (ERS)
+
+| Flujo | Qué pasa en la pantalla |
+|-------|-------------------------|
+| A1: no se encuentran bolsines en estado Enviado | Aviso "No se encontraron bolsines en estado Enviado" y botón para volver al menú. |
+| A2: no se encuentra bolsín con el precinto ingresado | Aviso amarillo "No se encontró ningún bolsín con el precinto…" debajo del filtro. |
+| A3: el GPS Tracker no pudo informar la ubicación | El bolsín queda en la lista con "Sin señal del GPS" y no se puede elegir. Si no hay ninguno con ubicación, aviso en rojo y no se pide elegir. |
+| A4: el encargado cancela el caso de uso | Botón **Cancelar** en la barra de abajo: vuelve al menú principal. |
+| A5: el encargado no quiere enviar el mail | Botón **No enviar** en la ventana: termina el caso de uso sin enviar nada. |

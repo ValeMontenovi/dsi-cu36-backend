@@ -52,22 +52,24 @@ export async function pedirSeguimientoBolsines(usuario) {
  *   POST /api/seguimiento/101/notificar?usuario=encargado-cba
  *
  * Lo usa GestorSeguimientoBolsin.regConfirmacion(). En el backend se hace el resto
- * del diagrama: buscarMail() → Bucle [Mientras haya Empleados] → llamarCU31/NotificarUbicacionBolsin().
+ * del diagrama: buscarMail() → llamarCU31/NotificarUbicacionBolsin().
  *
- * El envío solo se da por hecho con un 204 real (ver backend/CONTRATO_FRONTEND.md).
- * Hoy el backend responde 501 porque falta configurar el proveedor de correo:
- * en ese caso se informa el error, nunca se muestra como enviado.
+ * El envío solo se da por hecho con un 204 (ver CONTRATO_FRONTEND.md). Si el backend
+ * responde otra cosa (por ejemplo 502: el servidor de correo rechazó el mail), se
+ * informa el motivo y nunca se muestra como enviado.
  */
 export async function pedirNotificacionUbicacion(usuario, numeroBolsin) {
   const parametros = new URLSearchParams({ usuario })
-  const respuesta = await fetch(`/api/seguimiento/${numeroBolsin}/notificar?${parametros}`, { method: 'POST' })
+  let respuesta
+  try {
+    respuesta = await fetch(`/api/seguimiento/${numeroBolsin}/notificar?${parametros}`, { method: 'POST' })
+  } catch {
+    throw new Error('No se pudo conectar con el backend. ¿Está levantado en el puerto 8081?')
+  }
 
   if (respuesta.status === 204) return
 
   const motivo = await respuesta.text()
-  if (respuesta.status === 501) {
-    throw new Error(`El backend respondió 501 (el envío de mails todavía no está configurado). ${motivo}`.trim())
-  }
   throw new Error(
     motivo || `No se pudo obtener respuesta del backend (error ${respuesta.status}). ¿Está levantado en el puerto 8081?`,
   )

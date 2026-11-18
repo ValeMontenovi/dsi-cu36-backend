@@ -11,12 +11,13 @@ Backend académico del CU 36 **Consultar seguimiento de bolsines**, con patrón 
 - Contrato con arreglos paralelos de números, modelos y códigos de CM destino, más un código único de CM origen. Retorno `String[][]` de cinco columnas: `[numeroBolsin, latitud, longitud, fechaHoraActualizacion, errorGps]`, conservando el orden y admitiendo fallos parciales. Las ubicaciones ausentes usan `null`, nunca coordenadas cero.
 - XTR interpreta JSON con `items`, NavTrack texto CSV y GeoPulse una matriz JSON, según el [simulador de la cátedra](https://github.com/LiberaeMentis/dsi-api-bolsines/blob/main/README.md). Se verifica el número recibido antes de aceptar una ubicación.
 - Convención UTC para fechas externas sin zona; las fechas con desplazamiento lo conservan. Es una convención del backend, no una zona informada por el simulador.
-- Persistencia JPA con H2 de archivo, filtros por precinto y código de CM destino, y datos demo para los bolsines 101, 102 y 103.
+- Persistencia JPA con H2 de archivo, filtros por precinto y código de CM destino, y datos demo para los bolsines 101 a 112 (ver `config/DatosDemo.java`): cinco encargados (Córdoba, Rosario, Mendoza, Buenos Aires y Paraná), un bolsín que el simulador no conoce (111, flujo alternativo A3) y una CM sin bolsines enviados (Paraná, A1).
+- Notificación de ubicación (CU 31): `NotificadorUbicacionPorMail` arma el mail y lo envía por SMTP si hay un servidor configurado (`spring.mail.host`); si no, lo guarda como `.eml` en `data/mails/`. Detalles en `INSTALACION_WINDOWS.md`.
 - **Verificación:** compilación y 31 pruebas aprobadas. Integración HTTP verificada el 15/11/2026 con el simulador: consulta mixta 101/XTR, 102/NavTrack y 103/GeoPulse con números, coordenadas y fechas coincidentes con las respuestas directas; fallo parcial con 104 y 106 exitosos y 999 inexistente (GPS 404, backend 200 con ubicación nula y error).
 - La verificación HTTP usó una copia temporal sin cambios del simulador, puertos 18080/18081 y una base H2 en memoria. La fixture del backend agrupó los tres modelos bajo una CM para probar una consulta mixta; no se modificó la base existente. Las pruebas automatizadas GPS usan respuestas simuladas y son independientes de esa verificación HTTP manual.
 - **Próximo arranque sobre una base anterior:** migración del estado guardado al historial, conservando registros y sin inventar fechas históricas; detalles debajo.
 - **Frontend:** en la carpeta `../frontend` (React + Vite).
-- **Pendientes:** implementación de notificaciones (el proveedor actual devuelve 501 al intentar enviar con datos válidos), actualización de los diagramas y revisión restante del ERS. La autenticación real queda fuera de esta etapa demo.
+- **Pendientes:** actualización de los diagramas y revisión restante del ERS. La autenticación real queda fuera de esta etapa demo.
 
 ## Iniciar
 

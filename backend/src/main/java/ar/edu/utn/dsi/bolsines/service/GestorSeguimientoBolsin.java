@@ -132,10 +132,16 @@ public class GestorSeguimientoBolsin {
         if (s.ubicacion() == null) throw new GpsException(
             "No hay ubicación disponible para notificar"
         );
-        if (
-            b.obtenerCMDestino().getEmailGerente() == null ||
-            b.obtenerCMDestino().getEmailGerente().isBlank()
-        ) throw new IllegalArgumentException("CM destino sin email de gerente");
-        notificador.notificar(b.obtenerCMDestino().getEmailGerente(), s);
+        // Diagrama: llamarCU31/NotificarUbicacionBolsin()
+        notificador.notificar(buscarMail(b), s);
+    }
+
+    // Diagrama: buscarMail() — mail del gerente de la CM destino del bolsín seleccionado.
+    private String buscarMail(Bolsin seleccionado) {
+        String email = seleccionado.obtenerCMDestino().getEmailGerente();
+        if (email == null || email.isBlank()) throw new IllegalArgumentException(
+            "CM destino sin email de gerente"
+        );
+        return email;
     }
 }

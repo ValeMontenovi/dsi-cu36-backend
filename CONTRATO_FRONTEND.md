@@ -37,7 +37,11 @@ El historial determina el estado vigente. Si un bolsín de la CM consultada tien
 
 `POST http://localhost:8081/api/seguimiento/101/notificar?usuario=encargado-cba`
 
-En éxito devolverá `204 No Content`, pero **hoy devuelve `501 Not Implemented` porque no se configuró el proveedor de correo**. No presentar esto como implementado.
+En éxito devuelve `204 No Content`: el mail con el número de bolsín, la fecha y hora de la última actualización y las coordenadas se envió al gerente de la CM destino. Sin servidor de correo configurado, el backend lo guarda como archivo `.eml` en `backend/data/mails/` (ver `backend/INSTALACION_WINDOWS.md`).
+
+Errores: `400` si el bolsín no es del usuario o no está enviado, `503` si el GPS no informa su ubicación y `502 Bad Gateway` si el servidor de correo rechaza el envío. En esos casos el frontend muestra el motivo y nunca lo presenta como enviado.
+
+No enviar el mail (flujo alternativo A5) no llama a este endpoint.
 
 ## Datos que el frontend NO debe inventar
 

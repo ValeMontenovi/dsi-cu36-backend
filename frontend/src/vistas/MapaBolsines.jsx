@@ -29,14 +29,20 @@ const ICONO_BOLSIN_ELEGIDO = L.divIcon({
 // Parte de mostrarMapaBolsin(): dibuja el mapa que armó
 // InterfazGoogleMaps.mostrarMaps() → un marcador por bolsín ubicado.
 // Si hay un bolsín elegido (numeroElegido), su pin se resalta.
+// Mientras se pide elegir (seleccionHabilitada), tocar un pin elige ese
+// bolsín: es el paso 7 de la ERS, "selecciona un bolsín del mapa".
 // Solo dibuja: no tiene lógica del caso de uso.
 // =====================================================================
 
-export default function MapaBolsines({ mapa, numeroElegido = null }) {
+export default function MapaBolsines({ mapa, numeroElegido = null, seleccionHabilitada = false, onElegir }) {
   return (
     <section className="mapa-tarjeta">
       <h2 className="titulo-seccion">Última ubicación informada por el GPS</h2>
-      <p className="mapa-nota">Tocá un pin para ver el recorrido y la hora del dato.</p>
+      <p className="mapa-nota">
+        {seleccionHabilitada
+          ? 'Tocá un pin para elegir ese bolsín y ver su recorrido.'
+          : 'Tocá un pin para ver el recorrido y la hora del dato.'}
+      </p>
 
       {/* IMPORTANTE: .mapa tiene un alto fijo en el CSS; sin alto, el mapa no se ve */}
       <MapContainer center={mapa.centro} zoom={mapa.zoom} className="mapa">
@@ -48,6 +54,11 @@ export default function MapaBolsines({ mapa, numeroElegido = null }) {
             position={marcador.posicion}
             icon={marcador.numeroBolsin === numeroElegido ? ICONO_BOLSIN_ELEGIDO : ICONO_BOLSIN}
             zIndexOffset={marcador.numeroBolsin === numeroElegido ? 1000 : 0}
+            eventHandlers={{
+              click: () => {
+                if (seleccionHabilitada) onElegir(marcador.numeroBolsin)
+              },
+            }}
           >
             <Popup>
               <div className="popup-bolsin">

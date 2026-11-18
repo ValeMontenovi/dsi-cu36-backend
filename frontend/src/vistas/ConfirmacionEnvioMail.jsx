@@ -6,20 +6,21 @@ import { formatearCoordenada, formatearFechaHora } from './formato'
 // ---------------------------------------------------------------------
 // Parte de solicitarEnvioMail(): ventana que le pregunta al actor si
 // quiere enviar por mail la ubicación del bolsín seleccionado.
-//   "Confirmar envío" → tomarConfirmacion()
-//   "Cancelar" o Escape → vuelve a la selección (el actor no confirma)
+//   "Enviar mail"  → tomarConfirmacion(true)
+//   "No enviar"    → tomarConfirmacion(false): flujo alternativo A5
+//   "Elegir otro" o Escape → vuelve a la selección del bolsín
 // Solo dibuja: no tiene lógica del caso de uso.
 // =====================================================================
 
-export default function ConfirmacionEnvioMail({ bolsin, enviando, onConfirmar, onCancelar }) {
+export default function ConfirmacionEnvioMail({ bolsin, enviando, onEnviar, onNoEnviar, onVolver }) {
   // La tecla Escape cierra la ventana (salvo mientras se está enviando)
   useEffect(() => {
     const alApretarTecla = (evento) => {
-      if (evento.key === 'Escape' && !enviando) onCancelar()
+      if (evento.key === 'Escape' && !enviando) onVolver()
     }
     window.addEventListener('keydown', alApretarTecla)
     return () => window.removeEventListener('keydown', alApretarTecla)
-  }, [enviando, onCancelar])
+  }, [enviando, onVolver])
 
   return (
     <div className="velo">
@@ -28,15 +29,15 @@ export default function ConfirmacionEnvioMail({ bolsin, enviando, onConfirmar, o
           ¿Enviar la ubicación por mail?
         </h2>
         <p className="dialogo-texto">
-          Se le va a enviar un mail al gerente de la comisión médica destino con la última ubicación que informó el
-          GPS.
+          Podés avisarle al gerente de la comisión médica destino dónde está el bolsín. No es obligatorio: si no lo
+          enviás, la consulta termina igual.
         </p>
 
         <dl className="dialogo-datos">
           <div>
             <dt>Bolsín</dt>
             <dd>
-              {bolsin.numeroBolsin} · precinto {bolsin.numeroPrecinto}
+              {bolsin.numeroBolsin}, precinto {bolsin.numeroPrecinto}
             </dd>
           </div>
           <div>
@@ -59,17 +60,20 @@ export default function ConfirmacionEnvioMail({ bolsin, enviando, onConfirmar, o
         </dl>
 
         <div className="dialogo-botones">
-          <button className="boton-secundario" onClick={onCancelar} disabled={enviando}>
-            Cancelar
+          <button className="boton-enlace" onClick={onVolver} disabled={enviando}>
+            Elegir otro bolsín
           </button>
-          <button className="boton-principal" onClick={onConfirmar} disabled={enviando} autoFocus>
+          <button className="boton-secundario" onClick={onNoEnviar} disabled={enviando}>
+            No enviar
+          </button>
+          <button className="boton-principal" onClick={onEnviar} disabled={enviando} autoFocus>
             {enviando ? (
               <>
                 <span className="spinner" aria-hidden="true" />
                 Enviando…
               </>
             ) : (
-              'Confirmar envío'
+              'Enviar mail'
             )}
           </button>
         </div>

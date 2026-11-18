@@ -52,6 +52,13 @@ public class SeguimientoController {
         return e.getMessage();
     }
 
+    // El servidor de correo no pudo enviar el mail de ubicación (CU 31).
+    @ExceptionHandler(ar.edu.utn.dsi.bolsines.service.NotificacionException.class)
+    @ResponseStatus(HttpStatus.BAD_GATEWAY)
+    public String mailNoEnviado(Exception e) {
+        return e.getMessage();
+    }
+
     @ExceptionHandler(IllegalStateException.class)
     @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
     public String missingConfig(Exception e) {

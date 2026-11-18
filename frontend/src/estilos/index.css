@@ -147,16 +147,65 @@ h1, h2, h3, p { margin: 0; }
   animation: aparecer 200ms ease-out;
 }
 .alerta strong { color: var(--rojo); }
+.alerta + .alerta,
+.resultado > .alerta { margin-bottom: 16px; }
+/* A2: aviso (no es un error del sistema), en amarillo precinto */
+.alerta-aviso { background: #fff6d6; border-left-color: var(--amarillo); }
+.alerta-aviso strong { color: #7a5b00; }
 
-/* Flujo alternativo: la CM no tiene bolsines enviados */
+/* A1: la CM no tiene bolsines enviados */
 .vacio {
   max-width: 520px;
+  display: grid;
+  gap: 6px;
+  justify-items: start;
   padding: 20px 24px;
   color: var(--gris);
   background: var(--papel);
+  border-left: 4px solid var(--amarillo);
   border-radius: var(--radio);
   box-shadow: var(--sombra);
 }
+.vacio strong { font-family: var(--letra-angosta); font-weight: 700; font-size: 1.3rem; color: var(--azul); }
+.vacio .boton-secundario { margin-top: 10px; }
+
+/* Filtros por precinto y CM destino (paso 6 de la ERS, A2) */
+.filtros { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 16px; margin-bottom: 18px; }
+.filtro { display: grid; gap: 4px; font-size: 0.85rem; font-weight: 500; color: var(--gris); }
+.filtro input,
+.filtro select {
+  min-width: 190px;
+  font: inherit;
+  font-size: 0.95rem;
+  color: var(--tinta);
+  background: var(--papel);
+  border: 2px solid var(--linea);
+  border-radius: 8px;
+  padding: 7px 10px;
+}
+.filtro input:focus-visible,
+.filtro select:focus-visible { outline: none; border-color: var(--azul); box-shadow: 0 0 0 3px rgb(242 183 5 / 0.55); }
+.filtro input[aria-invalid="true"] { border-color: var(--amarillo); }
+.filtro-resultado { display: flex; align-items: center; gap: 8px; padding-bottom: 8px; font-size: 0.9rem; color: var(--gris); }
+@media (max-width: 560px) {
+  .filtro { flex: 1 1 100%; }
+  .filtro input, .filtro select { min-width: 0; width: 100%; }
+}
+
+/* Botón que parece un link (acciones secundarias) */
+.boton-enlace {
+  font: inherit;
+  font-weight: 500;
+  color: var(--azul);
+  background: none;
+  border: 0;
+  padding: 4px 2px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.boton-enlace:hover:not(:disabled) { color: var(--azul-hondo); }
+.boton-enlace:disabled { cursor: not-allowed; opacity: 0.6; }
 
 /* Lista de bolsines a la izquierda y mapa a la derecha; en pantallas angostas, uno abajo del otro */
 .contenido {
@@ -341,7 +390,8 @@ h1, h2, h3, p { margin: 0; }
   box-shadow: 0 1px 2px rgb(22 58 112 / 0.1), 0 14px 32px -12px rgb(22 58 112 / 0.5);
   animation: aparecer 200ms ease-out;
 }
-.panel-texto { flex: 1; min-width: 0; display: grid; gap: 2px; }
+/* En pantallas angostas los botones bajan a otra línea en vez de apretar el texto */
+.panel-texto { flex: 1 1 260px; min-width: 0; display: grid; gap: 2px; }
 .panel-texto > strong { font-family: var(--letra-angosta); font-weight: 700; font-size: 1.3rem; line-height: 1.15; color: var(--azul); }
 .panel-texto > p { color: var(--gris); }
 .panel-seleccion .boton-principal:disabled { cursor: not-allowed; opacity: 0.45; box-shadow: none; }
@@ -357,8 +407,13 @@ h1, h2, h3, p { margin: 0; }
 }
 .panel-error strong { color: var(--rojo); }
 
-/* Fin del caso de uso: mail enviado */
-.panel-enviado { justify-content: flex-start; border-left-color: var(--verde); }
+/* Cancelar (A4) y Continuar */
+.panel-botones { display: flex; flex-wrap: wrap; gap: 10px; margin-left: auto; }
+
+/* Fin del caso de uso: mail enviado, o sin enviarlo (A5) */
+.panel-enviado { border-left-color: var(--verde); }
+.panel-sin-envio { border-left-color: var(--azul); }
+.panel-sin-envio .panel-icono { color: var(--azul); }
 .panel-enviado .panel-texto > strong { color: #145f3f; }
 .panel-icono { width: 38px; height: 38px; flex-shrink: 0; color: var(--verde); }
 
@@ -414,7 +469,12 @@ h1, h2, h3, p { margin: 0; }
 .dialogo-datos dd { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; }
 .dialogo-datos dd small { display: block; font-size: 0.85rem; font-weight: 400; color: var(--gris); }
 
-.dialogo-botones { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 12px; margin-top: 4px; }
+.dialogo-botones { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 12px; margin-top: 4px; }
+.dialogo-botones .boton-enlace { margin-right: auto; }
+@media (max-width: 480px) {
+  /* En el celular cada dato va abajo de su título */
+  .dialogo-datos div { grid-template-columns: 1fr; gap: 2px; }
+}
 
 /* Pin del bolsín elegido: más grande y con los colores invertidos */
 .pin-elegido .pin-punto { background: var(--azul); border-color: var(--amarillo); }

@@ -22,3 +22,9 @@ tracker:
   xtr-path: /api/xtr-4500l/getBolsinLocation
   navtrack-path: /api/navtrack-qx-7a/retrieveTrackingData
   geopulse-path: /api/geopulse-mtr-900/fetchCargoPositions
+# Mail de ubicación (CU 31). Sin servidor de correo, cada mail se guarda como .eml en "carpeta".
+# Para enviarlo de verdad, definir SPRING_MAIL_HOST, SPRING_MAIL_PORT, SPRING_MAIL_USERNAME y
+# SPRING_MAIL_PASSWORD (ver INSTALACION_WINDOWS.md).
+notificaciones:
+  remitente: ${MAIL_REMITENTE:seguimiento-bolsines@organismo.test}
+  carpeta: ${MAIL_CARPETA:./data/mails}

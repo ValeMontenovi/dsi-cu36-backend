@@ -35,4 +35,21 @@ class DatosDemoHistorialTest {
             assertEquals(numero != 104, bolsin.sosEnviado());
         }
     }
+
+    @Test
+    void bolsinesNuevosCubrenBuenosAiresYLosFlujosAlternativos() {
+        for (long numero = 105; numero <= 111; numero++) {
+            assertTrue(bolsines.findById(numero).orElseThrow().sosEnviado(), "bolsín " + numero);
+        }
+        // 111 no existe en el simulador: el GPS no puede ubicarlo (A3)
+        assertTrue(bolsines.findById(111L).orElseThrow().esTuCMOrigen("CM-BA-01"));
+        // Paraná no tiene ningún bolsín enviado (A1)
+        var parana = bolsines
+            .findAll()
+            .stream()
+            .filter(b -> b.esTuCMOrigen("CM-PNA-01"))
+            .toList();
+        assertEquals(1, parana.size());
+        assertFalse(parana.get(0).sosEnviado());
+    }
 }

@@ -47,10 +47,34 @@ Ejemplo de variable temporal PowerShell si el mock cambia de puerto:
 $env:GPS_BASE_URL = "http://localhost:8080"
 ```
 
-## 5. Problemas frecuentes
+## 5. Mail de ubicación (CU 31)
+
+Sin configurar nada, cada mail que se "envía" desde la pantalla se guarda como archivo en
+`backend/data/mails/` (por ejemplo `20261117-204434-bolsin-108.eml`). Se abre con doble clic en
+Outlook o Thunderbird y muestra el mail completo: destinatario, asunto y texto. La consola del backend
+también avisa dónde lo guardó.
+
+Para enviarlo de verdad hay que indicarle al backend un servidor SMTP antes de levantarlo. Ejemplo
+con PowerShell (las credenciales son de cada uno; no las subas al repositorio ni las compartas):
+
+```powershell
+$env:SPRING_MAIL_HOST = "smtp.gmail.com"
+$env:SPRING_MAIL_PORT = "587"
+$env:SPRING_MAIL_USERNAME = "tu-cuenta@gmail.com"
+$env:SPRING_MAIL_PASSWORD = "contraseña de aplicación"
+$env:SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH = "true"
+$env:SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE = "true"
+$env:MAIL_REMITENTE = "tu-cuenta@gmail.com"
+mvn spring-boot:run '-Dspring-boot.run.profiles=demo'
+```
+
+Los mails de los gerentes de prueba son `gerente-xxx@example.test`, que no existen: para recibir uno
+de verdad, cambiar el mail del gerente en la base o en `config/DatosDemo.java`.
+
+## 6. Problemas frecuentes
 
 - `java` / `javac` no reconocido: reiniciar VS Code después de instalar JDK, revisar PATH y JAVA_HOME.
 - `mvn` no reconocido: instalar Maven y agregar `bin` al PATH.
 - Puerto 8081 ocupado: cambiar `server.port` en `src/main/resources/application.yml`.
 - GPS no responde: verificar que el simulador esté levantado y que la URL/rutas/headers coincidan con el README.
-- `POST /notificar` devuelve 501: proveedor real de email pendiente, no es un envío exitoso.
+- `POST /notificar` devuelve 502: el servidor de correo rechazó el envío. Revisar las variables `SPRING_MAIL_*` o quitarlas para volver a guardar los mails como `.eml`.

@@ -10,12 +10,17 @@ import { pedirNotificacionUbicacion, pedirSeguimientoBolsines } from '../servici
 //   • BACKEND (Java): busca la CM del usuario, los bolsines enviados
 //     y su ubicación con el PATRÓN ADAPTER
 //     (buscarCMUsuario, buscarBolsinesEnviadoCM, localizarBolsines).
-//     También busca los mails y notifica (buscarMail, llamarCU31).
+//     También busca el mail y notifica (buscarMail, llamarCU31).
 //
 //   • FRONTEND (este archivo): recibe el pedido de la pantalla,
 //     le pregunta al backend por HTTP y coordina la parte visual
 //     (solicitarMapa con la InterfazGoogleMaps, la selección del
 //     bolsín y la confirmación del envío del mail).
+//
+// Flujos alternativos del CU 36 que resuelve:
+//   A1 → la CM no tiene bolsines enviados: no se pide elegir ninguno.
+//   A3 → el GPS no informó la ubicación de ningún bolsín: tampoco.
+//   A5 → el actor elige no enviar el mail: termina sin notificar.
 // =====================================================================
 
 export default class GestorSeguimientoBolsin {
@@ -44,16 +49,19 @@ export default class GestorSeguimientoBolsin {
 
     // Diagrama: GestorSeguimientoBolsin → PantallaSeguimientoBolsin : mostrarCMUsuario()
     // El backend no manda la CM por separado: todos los bolsines salen de la CM
-    // del usuario, así que se toma del primero. Si no hay bolsines, no se conoce.
-    const cmUsuario = bolsines.length > 0 ? bolsines[0].cmOrigen : null
+    // del usuario, así que se toma del primero. Si no hay bolsines (A1), se usa
+    // la CM a la que está asignado el usuario que inició sesión.
+    const cmUsuario =
+      bolsines.length > 0 ? bolsines[0].cmOrigen : sesion.getUsuarioLogueado().getComisionMedica().nombre
     this.pantalla.mostrarCMUsuario(cmUsuario)
 
     this.bolsines = bolsines
     this.solicitarMapa(bolsines)
 
     // Diagrama: GestorSeguimientoBolsin → PantallaSeguimientoBolsin : solicitarSelBolsinTipo()
-    // Si la CM no tiene bolsines enviados no hay nada para elegir.
-    if (bolsines.length > 0) {
+    // Solo se puede elegir un bolsín con ubicación: sin bolsines (A1) o sin
+    // ninguna ubicación del GPS (A3) no hay nada para notificar.
+    if (bolsines.some((bolsin) => bolsin.ubicacion)) {
       this.pantalla.solicitarSelBolsinTipo()
     }
   }
@@ -77,22 +85,29 @@ export default class GestorSeguimientoBolsin {
   }
 
   // Diagrama: PantallaSeguimientoBolsin → GestorSeguimientoBolsin : regConfirmacion()
-  async regConfirmacion() {
+  // confirma = true  → el actor quiere enviar el mail.
+  // confirma = false → flujo alternativo A5: no se envía y termina el caso de uso.
+  async regConfirmacion(confirma) {
+    if (!confirma) {
+      this.finCU(false)
+      return
+    }
+
     try {
-      // En el backend: buscarMail() → Bucle [Mientras haya Empleados] → llamarCU31/NotificarUbicacionBolsin()
+      // En el backend: buscarMail() → llamarCU31/NotificarUbicacionBolsin()
       await pedirNotificacionUbicacion(this.sesion.getUsuario(), this.bolsinSeleccionado.numeroBolsin)
     } catch (error) {
-      // Flujo alternativo: el backend no pudo enviar el mail (hoy responde 501).
+      // Flujo alternativo: el backend no pudo enviar el mail.
       this.pantalla.mostrarErrorNotificacion(error.message)
       return
     }
 
-    this.finCU()
+    this.finCU(true)
   }
 
   // Diagrama: GestorSeguimientoBolsin → GestorSeguimientoBolsin : FinCU()
-  finCU() {
-    // Aviso a la pantalla (no figura en el diagrama) para que muestre que el envío terminó.
-    this.pantalla.mostrarNotificacionEnviada(this.bolsinSeleccionado)
+  finCU(mailEnviado) {
+    // Aviso a la pantalla (no figura en el diagrama) para que muestre cómo terminó.
+    this.pantalla.mostrarFinCasoDeUso(this.bolsinSeleccionado, mailEnviado)
   }
 }
