@@ -1,6 +1,9 @@
 package ar.edu.utn.dsi.bolsines.adapter;
 
 import ar.edu.utn.dsi.bolsines.dto.UbicacionBolsin;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Map;
 
 public class AdaptadorNavTrackQX7A implements IAdaptadorGPSTracker {
@@ -8,7 +11,6 @@ public class AdaptadorNavTrackQX7A implements IAdaptadorGPSTracker {
     private final ClienteGpsHttp cliente;
     private final String path;
     private final String claveApi;
-    private final NormalizadorGps normalizador = new NormalizadorGps();
 
     public AdaptadorNavTrackQX7A(ClienteGpsHttp cliente, String path, String claveApi) {
         this.cliente = cliente;
@@ -68,6 +70,38 @@ public class AdaptadorNavTrackQX7A implements IAdaptadorGPSTracker {
     }
 
     private UbicacionBolsin adaptarDatosRelevados(String respuesta) {
-        return normalizador.desdeCsv(respuesta);
+        try {
+            String[] f = respuesta.trim().split(",", -1);
+            if (f.length != 4) throw new IllegalArgumentException(
+                "Se esperaban cuatro campos NavTrack"
+            );
+            return crear(
+                Long.parseLong(f[0].trim()),
+                Double.parseDouble(f[1].trim()),
+                Double.parseDouble(f[2].trim()),
+                f[3].trim()
+            );
+        } catch (Exception e) {
+            throw new GpsException("Respuesta NavTrack invalida", e);
+        }
+    }
+
+    // Las fechas externas sin zona conservan la convencion UTC acordada.
+    private UbicacionBolsin crear(long numero, double lat, double lon, String fecha) {
+        if (
+            !Double.isFinite(lat) ||
+            !Double.isFinite(lon) ||
+            lat < -90 ||
+            lat > 90 ||
+            lon < -180 ||
+            lon > 180
+        ) throw new IllegalArgumentException("Coordenadas invalidas");
+        OffsetDateTime dt;
+        try {
+            dt = OffsetDateTime.parse(fecha);
+        } catch (java.time.format.DateTimeParseException e) {
+            dt = LocalDateTime.parse(fecha).atOffset(ZoneOffset.UTC);
+        }
+        return new UbicacionBolsin(numero, lat, lon, dt);
     }
 }

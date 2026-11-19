@@ -1,6 +1,11 @@
 package ar.edu.utn.dsi.bolsines.adapter;
 
 import ar.edu.utn.dsi.bolsines.dto.UbicacionBolsin;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Map;
 
 public class AdaptadorGeoPulseMTR900 implements IAdaptadorGPSTracker {
@@ -8,7 +13,7 @@ public class AdaptadorGeoPulseMTR900 implements IAdaptadorGPSTracker {
     private final ClienteGpsHttp cliente;
     private final String path;
     private final String claveApi;
-    private final NormalizadorGps normalizador = new NormalizadorGps();
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     public AdaptadorGeoPulseMTR900(ClienteGpsHttp cliente, String path, String claveApi) {
         this.cliente = cliente;
@@ -54,6 +59,54 @@ public class AdaptadorGeoPulseMTR900 implements IAdaptadorGPSTracker {
     }
 
     private UbicacionBolsin adaptarDatosRelevados(String respuesta) {
-        return normalizador.desdeMatriz(respuesta);
+        try {
+            JsonNode matriz = MAPPER.readTree(respuesta);
+            if (
+                !matriz.isArray() ||
+                matriz.size() != 1 ||
+                !matriz.get(0).isArray() ||
+                matriz.get(0).size() != 4
+            ) throw new IllegalArgumentException(
+                "Se esperaba una fila GeoPulse de cuatro columnas"
+            );
+            JsonNode a = matriz.get(0);
+            return crear(a.get(0), a.get(1), a.get(2), a.get(3));
+        } catch (Exception e) {
+            throw new GpsException("Respuesta GeoPulse invalida", e);
+        }
+    }
+
+    private UbicacionBolsin crear(JsonNode numero, JsonNode lat, JsonNode lon, JsonNode fecha) {
+        if (
+            numero == null ||
+            !numero.isIntegralNumber() ||
+            !numero.canConvertToLong() ||
+            lat == null ||
+            !lat.isNumber() ||
+            lon == null ||
+            !lon.isNumber() ||
+            fecha == null ||
+            !fecha.isTextual()
+        ) throw new IllegalArgumentException("Campos GPS ausentes o de tipo incorrecto");
+        return crear(numero.longValue(), lat.doubleValue(), lon.doubleValue(), fecha.textValue());
+    }
+
+    // Las fechas externas sin zona conservan la convencion UTC acordada.
+    private UbicacionBolsin crear(long numero, double lat, double lon, String fecha) {
+        if (
+            !Double.isFinite(lat) ||
+            !Double.isFinite(lon) ||
+            lat < -90 ||
+            lat > 90 ||
+            lon < -180 ||
+            lon > 180
+        ) throw new IllegalArgumentException("Coordenadas invalidas");
+        OffsetDateTime dt;
+        try {
+            dt = OffsetDateTime.parse(fecha);
+        } catch (java.time.format.DateTimeParseException e) {
+            dt = LocalDateTime.parse(fecha).atOffset(ZoneOffset.UTC);
+        }
+        return new UbicacionBolsin(numero, lat, lon, dt);
     }
 }

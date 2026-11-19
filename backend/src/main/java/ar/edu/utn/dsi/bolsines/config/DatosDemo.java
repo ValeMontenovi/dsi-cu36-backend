@@ -66,6 +66,7 @@ public class DatosDemo {
             bolsin(b, 111L, buenosAires, mendoza, "ENVIADO", ModeloGps.XTR_4500L);
             bolsin(b, 112L, parana, buenosAires, "CERRADO", ModeloGps.XTR_4500L);
             bolsin(b, 113L, cordoba, rosario, "ENVIADO", ModeloGps.XTR_4500L);
+            bolsin(b, 115L, cordoba, rosario, "ENVIADO", ModeloGps.XTR_4500L);
         };
     }
 

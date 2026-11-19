@@ -25,7 +25,7 @@ class DatosDemoHistorialTest {
 
     @Test
     void inicioCompletoCreaDatosDemoConUnCambioActual() {
-        for (long numero : new long[] { 101, 102, 103, 104, 113 }) {
+        for (long numero : new long[] { 101, 102, 103, 104, 113, 115 }) {
             var bolsin = bolsines.findById(numero).orElseThrow();
             assertEquals(1, bolsin.getCambioEstado().size());
             var cambio = bolsin.getCambioEstado().get(0);
@@ -41,7 +41,7 @@ class DatosDemoHistorialTest {
             .map(b -> b.getNroBolsin())
             .sorted()
             .toList();
-        assertEquals(java.util.List.of(101L, 105L, 107L, 113L), cordoba);
+        assertEquals(java.util.List.of(101L, 105L, 107L, 113L, 115L), cordoba);
         var nuevo = bolsines.findById(113L).orElseThrow();
         assertEquals("P-113", nuevo.getNroPrecinto());
         assertEquals("CM-ROS-02", nuevo.obtenerCMDestino().getCodigo());

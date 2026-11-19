@@ -26,6 +26,11 @@ String[][] recibirDatosLocalizacion(
 
 ## Responsabilidades y orden
 
+Cada adaptador interpreta y valida directamente el formato de su proveedor en
+`adaptarDatosRelevados()`: XTR procesa su JSON, NavTrack su CSV y GeoPulse su matriz JSON.
+También valida coordenadas y fechas y construye el resultado normalizado. No existe un
+normalizador compartido; `ClienteGpsHttp` se conserva como auxiliar de transporte HTTP.
+
 El gestor selecciona los bolsines enviados de la CM del empleado y aplica los filtros existentes.
 Construye los tres arreglos paralelos con numero, nombre del modelo y codigo de destino de cada bolsin.
 Convierte `Long` a `int` mediante `Math.toIntExact`; fuera de rango informa un argumento invalido.
