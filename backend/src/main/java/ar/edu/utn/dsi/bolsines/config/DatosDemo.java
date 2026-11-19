@@ -11,14 +11,15 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 
 /**
- * Datos demo alineados con el InMemoryBolsinRepository del simulador de la cátedra (bolsines 101
- * a 110). Cada modelo de GPS valida distinto: XTR exige la CM origen del simulador, NavTrack la
+ * Datos demo basados en el InMemoryBolsinRepository del simulador de la cátedra (bolsines 101
+ * a 110), con el 113 agregado para la prueba de integración local. Cada modelo de GPS valida
+ * distinto: XTR exige la CM origen del simulador, NavTrack la
  * CM destino y GeoPulse solo el número.
  *
  * <p>Por encargado:
  *
  * <ul>
- *   <li>encargado-cba (Córdoba): 101, 105 y 107 enviados.
+ *   <li>encargado-cba (Córdoba): 101, 105, 107 y 113 enviados.
  *   <li>encargado-ros (Rosario): 102 y 106 enviados.
  *   <li>encargado-mdz (Mendoza): 103 y 110 enviados.
  *   <li>encargado-ba (Buenos Aires): 108 y 109 enviados, 111 enviado sin GPS (el simulador no lo
@@ -64,6 +65,7 @@ public class DatosDemo {
             bolsin(b, 110L, mendoza, rosario, "ENVIADO", ModeloGps.NAVTRACK_QX_7A);
             bolsin(b, 111L, buenosAires, mendoza, "ENVIADO", ModeloGps.XTR_4500L);
             bolsin(b, 112L, parana, buenosAires, "CERRADO", ModeloGps.XTR_4500L);
+            bolsin(b, 113L, cordoba, rosario, "ENVIADO", ModeloGps.XTR_4500L);
         };
     }
 

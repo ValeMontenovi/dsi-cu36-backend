@@ -30,6 +30,26 @@ git submodule update --init
 
 ## Levantar todo (tres terminales)
 
+### Registro GPS adicional para el bolsín 113
+
+El backend demo incorpora el cuarto bolsín enviado de Córdoba: **113 / P-113, Córdoba → Rosario, XTR**.
+El simulador original no incluye ese número. Desde la raíz del proyecto, después de inicializar
+el submódulo, aplicar una sola vez el dato adicional publicado en este repositorio:
+
+```bash
+git -C api apply --check ../fixtures/api-bolsin-113.patch
+git -C api apply ../fixtures/api-bolsin-113.patch
+```
+
+Si ya lo aplicaste, no lo vuelvas a aplicar. Podés comprobarlo con
+`git -C api apply --reverse --check ../fixtures/api-bolsin-113.patch`: si termina correctamente,
+el parche ya está presente. `git status` mostrará `api/` modificado por este dato local esperado.
+El submódulo sigue apuntando al commit original de la cátedra; el parche permite compartir el
+113 sin requerir permisos de escritura en su repositorio. Para cargarlo, reiniciar el simulador
+y el backend con perfil `demo`, sin borrar la base existente. Luego recargar el frontend.
+
+### Comandos de inicio
+
 Requisitos: JDK 21, Maven 3.9+ y Node.js 20+.
 
 ```powershell

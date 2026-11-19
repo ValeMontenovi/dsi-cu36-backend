@@ -93,20 +93,20 @@ abierta, así que recargar la página no te saca del sistema.
 
 Todos usan la contraseña `Bolsines2026`.
 
-| Mail                               | Perfil                     | CM        | Usuario en el backend |
-|------------------------------------|----------------------------|-----------|-----------------------|
-| `encargado.cordoba@bolsines.test`  | Encargado de Bolsines      | Córdoba   | `encargado-cba`       |
-| `encargado.rosario@bolsines.test`  | Encargado de Bolsines      | Rosario   | `encargado-ros`       |
-| `encargado.mendoza@bolsines.test`  | Encargado de Bolsines      | Mendoza   | `encargado-mdz`       |
-| `encargado.buenosaires@bolsines.test` | Encargado de Bolsines   | Buenos Aires | `encargado-ba`     |
-| `encargado.parana@bolsines.test`   | Encargado de Bolsines      | Paraná    | `encargado-pna`       |
-| `gerente.cordoba@bolsines.test`    | Gerente de Comisión Médica | Córdoba   | (no existe)           |
+| Mail                                  | Perfil                     | CM           | Usuario en el backend |
+| ------------------------------------- | -------------------------- | ------------ | --------------------- |
+| `encargado.cordoba@bolsines.test`     | Encargado de Bolsines      | Córdoba      | `encargado-cba`       |
+| `encargado.rosario@bolsines.test`     | Encargado de Bolsines      | Rosario      | `encargado-ros`       |
+| `encargado.mendoza@bolsines.test`     | Encargado de Bolsines      | Mendoza      | `encargado-mdz`       |
+| `encargado.buenosaires@bolsines.test` | Encargado de Bolsines      | Buenos Aires | `encargado-ba`        |
+| `encargado.parana@bolsines.test`      | Encargado de Bolsines      | Paraná       | `encargado-pna`       |
+| `gerente.cordoba@bolsines.test`       | Gerente de Comisión Médica | Córdoba      | (no existe)           |
 
 Qué ve cada encargado en el seguimiento:
 
 | Encargado    | Bolsines enviados                                   | Sirve para probar             |
-|--------------|-----------------------------------------------------|-------------------------------|
-| Córdoba      | 101 (XTR), 105 y 107 (GeoPulse)                     | flujo normal y filtros        |
+| ------------ | --------------------------------------------------- | ----------------------------- |
+| Córdoba      | 101 y 113 (XTR), 105 y 107 (GeoPulse)               | flujo normal y filtros        |
 | Rosario      | 102 (NavTrack) y 106 (GeoPulse)                     | flujo normal                  |
 | Mendoza      | 103 (GeoPulse) y 110 (NavTrack)                     | flujo normal                  |
 | Buenos Aires | 108 (GeoPulse), 109 (NavTrack) y 111 (XTR, sin GPS) | A3: el 111 no tiene ubicación |
@@ -120,12 +120,12 @@ sistema real la contraseña la tiene que validar el backend.
 
 ## Scripts
 
-| Comando           | Qué hace                                  |
-|-------------------|-------------------------------------------|
+| Comando           | Qué hace                                   |
+| ----------------- | ------------------------------------------ |
 | `npm run dev`     | servidor de desarrollo con recarga en vivo |
 | `npm run build`   | genera la versión de producción en `dist/` |
 | `npm run preview` | sirve la carpeta `dist/` para probarla     |
-| `npm run lint`    | revisa el código con oxlint               |
+| `npm run lint`    | revisa el código con oxlint                |
 
 ## Selección del bolsín y envío del mail (resto del diagrama)
 
@@ -144,10 +144,10 @@ El mail se guarda en `backend/data/mails/` si el backend no tiene un servidor de
 
 ## Flujos alternativos (ERS)
 
-| Flujo | Qué pasa en la pantalla |
-|-------|-------------------------|
-| A1: no se encuentran bolsines en estado Enviado | Aviso "No se encontraron bolsines en estado Enviado" y botón para volver al menú. |
-| A2: no se encuentra bolsín con el precinto ingresado | Aviso amarillo "No se encontró ningún bolsín con el precinto…" debajo del filtro. |
-| A3: el GPS Tracker no pudo informar la ubicación | El bolsín queda en la lista con "Sin señal del GPS" y no se puede elegir. Si no hay ninguno con ubicación, aviso en rojo y no se pide elegir. |
-| A4: el encargado cancela el caso de uso | Botón **Cancelar** en la barra de abajo: vuelve al menú principal. |
-| A5: el encargado no quiere enviar el mail | Botón **No enviar** en la ventana: termina el caso de uso sin enviar nada. |
+| Flujo                                                | Qué pasa en la pantalla                                                                                                                       |
+| ---------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| A1: no se encuentran bolsines en estado Enviado      | Aviso "No se encontraron bolsines en estado Enviado" y botón para volver al menú.                                                             |
+| A2: no se encuentra bolsín con el precinto ingresado | Aviso amarillo "No se encontró ningún bolsín con el precinto…" debajo del filtro.                                                             |
+| A3: el GPS Tracker no pudo informar la ubicación     | El bolsín queda en la lista con "Sin señal del GPS" y no se puede elegir. Si no hay ninguno con ubicación, aviso en rojo y no se pide elegir. |
+| A4: el encargado cancela el caso de uso              | Botón **Cancelar** en la barra de abajo: vuelve al menú principal.                                                                            |
+| A5: el encargado no quiere enviar el mail            | Botón **No enviar** en la ventana: termina el caso de uso sin enviar nada.                                                                    |

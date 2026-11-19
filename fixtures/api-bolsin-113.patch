@@ -1,0 +1,9 @@
+diff --git a/src/main/java/ar/edu/dsi/gpstracker/repository/InMemoryBolsinRepository.java b/src/main/java/ar/edu/dsi/gpstracker/repository/InMemoryBolsinRepository.java
+index e2a63e5..1aab80d 100644
+--- a/src/main/java/ar/edu/dsi/gpstracker/repository/InMemoryBolsinRepository.java
++++ b/src/main/java/ar/edu/dsi/gpstracker/repository/InMemoryBolsinRepository.java
+@@ -28,2 +28,4 @@ public class InMemoryBolsinRepository {
+         bolsines.add(new Bolsin(110, "CM-CBA-02", "CM-ROS-02", -31.4167, -64.1833, LocalDateTime.of(2026, 3, 7, 12, 52, 9)));
++        // Dato de prueba local para comprobar el cuarto bolsin enviado desde Cordoba.
++        bolsines.add(new Bolsin(113, "CM-CBA-01", "CM-ROS-02", -32.4075, -63.2402, LocalDateTime.of(2026, 11, 19, 14, 0, 0)));
+     }

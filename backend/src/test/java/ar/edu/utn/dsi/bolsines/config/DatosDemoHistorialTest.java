@@ -25,7 +25,7 @@ class DatosDemoHistorialTest {
 
     @Test
     void inicioCompletoCreaDatosDemoConUnCambioActual() {
-        for (long numero : new long[] { 101, 102, 103, 104 }) {
+        for (long numero : new long[] { 101, 102, 103, 104, 113 }) {
             var bolsin = bolsines.findById(numero).orElseThrow();
             assertEquals(1, bolsin.getCambioEstado().size());
             var cambio = bolsin.getCambioEstado().get(0);
@@ -34,6 +34,18 @@ class DatosDemoHistorialTest {
             assertFalse(cambio.isImportado());
             assertEquals(numero != 104, bolsin.sosEnviado());
         }
+        var cordoba = bolsines
+            .findAll()
+            .stream()
+            .filter(b -> b.esTuCMOrigen("CM-CBA-01") && b.sosEnviado())
+            .map(b -> b.getNroBolsin())
+            .sorted()
+            .toList();
+        assertEquals(java.util.List.of(101L, 105L, 107L, 113L), cordoba);
+        var nuevo = bolsines.findById(113L).orElseThrow();
+        assertEquals("P-113", nuevo.getNroPrecinto());
+        assertEquals("CM-ROS-02", nuevo.obtenerCMDestino().getCodigo());
+        assertEquals(ar.edu.utn.dsi.bolsines.domain.ModeloGps.XTR_4500L, nuevo.getModeloGps());
     }
 
     @Test
